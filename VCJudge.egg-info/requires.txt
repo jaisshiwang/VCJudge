@@ -1,0 +1,6 @@
+openai
+PyMuPDF
+python-pptx
+PyYAML
+pydantic
+tqdm

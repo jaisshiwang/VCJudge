@@ -1,0 +1,16 @@
+LICENSE
+README.md
+setup.py
+VCJudge.egg-info/PKG-INFO
+VCJudge.egg-info/SOURCES.txt
+VCJudge.egg-info/dependency_links.txt
+VCJudge.egg-info/entry_points.txt
+VCJudge.egg-info/requires.txt
+VCJudge.egg-info/top_level.txt
+llm/__init__.py
+llm/analyzer.py
+llm/extractor.py
+llm/prompts.py
+utils/__init__.py
+utils/file_handler.py
+utils/logger.py

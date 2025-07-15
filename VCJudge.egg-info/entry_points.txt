@@ -1,0 +1,2 @@
+[console_scripts]
+vcjudge = main:main

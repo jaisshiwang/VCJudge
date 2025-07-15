@@ -1,0 +1,7 @@
+# .gitignore --- IGNORE ---
+
+config/settings.yaml
+
+.venv/
+__pycache__/
+*.pyc
