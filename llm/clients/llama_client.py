@@ -1,4 +1,3 @@
-
 from llama_cpp import Llama
 from utils.file_handler import load_config
 

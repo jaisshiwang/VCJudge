@@ -11,6 +11,11 @@ llm/__init__.py
 llm/analyzer.py
 llm/extractor.py
 llm/prompts.py
+llm/clients/__init__.py
+llm/clients/anthropic_client.py
+llm/clients/groq_client.py
+llm/clients/llama_client.py
+llm/clients/openai_client.py
 utils/__init__.py
 utils/file_handler.py
 utils/logger.py

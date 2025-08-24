@@ -7,6 +7,9 @@ Classifier: Programming Language :: Python :: 3.13
 Classifier: Operating System :: OS Independent
 License-File: LICENSE
 Requires-Dist: openai
+Requires-Dist: llama-cpp-python
+Requires-Dist: anthropic
+Requires-Dist: groq
 Requires-Dist: PyMuPDF
 Requires-Dist: python-pptx
 Requires-Dist: PyYAML

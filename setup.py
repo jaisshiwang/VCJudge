@@ -8,6 +8,9 @@ setup(
     packages=find_packages(include=["llm", "llm.*", "utils", "utils.*"]),
     install_requires=[
         "openai",
+        "llama-cpp-python",
+        "anthropic",
+        "groq",
         "PyMuPDF",
         "python-pptx",
         "PyYAML",

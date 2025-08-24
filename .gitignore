@@ -5,3 +5,7 @@ config/settings.yaml
 .venv/
 __pycache__/
 *.pyc
+logs/
+*.log
+
+.DS_Store

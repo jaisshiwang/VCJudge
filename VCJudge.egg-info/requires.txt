@@ -1,4 +1,7 @@
 openai
+llama-cpp-python
+anthropic
+groq
 PyMuPDF
 python-pptx
 PyYAML

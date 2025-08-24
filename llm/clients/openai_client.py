@@ -6,7 +6,7 @@ config = load_config()
 openai.api_key = config.openai.api_key
 
 def call_model(prompt: str) -> str:
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model=config.openai.model,
         messages=[
             {"role": "system", "content": "You are an expert VC analyst."},

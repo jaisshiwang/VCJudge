@@ -1,12 +1,15 @@
-import openai
+from openai import OpenAI
 from utils.file_handler import load_config
 
 config = load_config()
-openai.api_key = config.groq.api_key
-openai.base_url = config.groq.base_url
+
+client = OpenAI(
+    api_key=config.groq.api_key,
+    base_url=config.groq.base_url
+)
 
 def call_model(prompt: str) -> str:
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=config.llm.model,
         messages=[
             {"role": "system", "content": "You are an expert VC analyst."},
