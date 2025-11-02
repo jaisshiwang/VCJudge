@@ -5,6 +5,9 @@ from fastapi.responses import FileResponse, JSONResponse
 from pathlib import Path
 import uuid, os, sys, logging
 
+from .logger import setup_logger
+logger = setup_logger()
+
 from .report_parser import parse_llm_report_to_struct
 
 # --- Make sure project root is importable (so `llm` works) ---
@@ -94,7 +97,7 @@ async def analyze(file: UploadFile = File(...)):
         # 3) Parse the raw report to structured data and return at top-level
         parsed = parse_llm_report_to_struct(raw)
         payload = {**parsed, "download": f"/files/{fname}"}
-        print(parsed)
+        
         logger.info("Analysis OK for %s", fname)
         return JSONResponse(content=payload, status_code=200)
 
