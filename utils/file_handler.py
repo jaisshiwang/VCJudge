@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 import yaml
+from pathlib import Path
 
 class LLMConfig(BaseModel):
     provider: str
@@ -32,6 +33,13 @@ class AppConfig(BaseModel):
     llama: Optional[LlamaConfig]
 
 def load_config(path: str = "config/settings.yaml") -> AppConfig:
-    with open(path, "r") as f:
+    # always resolve relative to project root (where this file lives)
+    base = Path(__file__).resolve().parents[1]  # /Users/.../VCJudge/
+    cfg_path = (base / path).resolve()
+
+    if not cfg_path.exists():
+        raise FileNotFoundError(f"Config file not found: {cfg_path}")
+
+    with open(cfg_path, "r") as f:
         data = yaml.safe_load(f)
     return AppConfig(**data)

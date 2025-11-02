@@ -1,11 +1,26 @@
+from typing import Any
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Optional
-import uuid, os
+from fastapi.responses import FileResponse, JSONResponse
+from pathlib import Path
+import uuid, os, sys, logging
 
+# --- Make sure project root is importable (so `llm` works) ---
+ROOT = Path(__file__).resolve().parents[1]   # vc-judge-api/
+PROJECT_ROOT = ROOT.parent                   # VCJudge/
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+# --- Your modules ---
+from llm.extractor import extract_text
+from llm.analyzer import analyze_pitch_deck
+
+# --- Logging ---
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+logger = logging.getLogger("vcjudge-api")
+
+# --- FastAPI setup ---
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,34 +28,84 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class AnalyzeResponse(BaseModel):
-    startup_name: str
-    sector: str
-    status: str
-    executive_summary: str
-    strengths: list[str]
-    weaknesses: list[str]
-    notes: Optional[str] = None
-    links: dict = {}
+BASE_DIR = Path(__file__).parent
+UPLOAD_DIR = BASE_DIR / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+@app.get("/health")
+def health():
+    return {"ok": True}
 
-@app.post("/api/analyze", response_model=AnalyzeResponse)
+def _to_report_text(raw: Any) -> str:
+    """
+    Coerce whatever the analyzer returns into a single human-readable report string.
+    - If it's already a string, return as-is.
+    - If it's a dict, pretty-join keys/values deterministically.
+    - Otherwise, stringify.
+    """
+    if isinstance(raw, str):
+        return raw.strip()
+
+    if isinstance(raw, dict):
+        # Preserve common sections if they exist (optional)
+        preferred = [
+            "LLM Response", "report", "Executive Summary", "executive_summary",
+            "Overall Score", "overall_score", "scores",
+            "Strengths", "strengths", "Weaknesses", "weaknesses",
+            "notes", "sector", "status",
+        ]
+        lines = []
+
+        def _fmt_val(v):
+            if isinstance(v, (list, tuple)):
+                return "\n".join(f"- {x}" for x in v)
+            return str(v)
+
+        # preferred keys first
+        for k in preferred:
+            if k in raw and raw[k] is not None:
+                lines.append(f"{k}:\n{_fmt_val(raw[k])}")
+
+        # then any remaining keys
+        for k, v in raw.items():
+            if k in preferred or v is None:
+                continue
+            lines.append(f"{k}:\n{_fmt_val(v)}")
+
+        return ("\n\n".join(lines)).strip() or str(raw)
+
+    return str(raw).strip()
+
+@app.post("/api/analyze")
 async def analyze(file: UploadFile = File(...)):
-    filename = f"{uuid.uuid4()}_{file.filename}"
-    filepath = os.path.join(UPLOAD_DIR, filename)
-    with open(filepath, "wb") as f:
+    # 1) Save upload
+    fname = f"{uuid.uuid4()}_{file.filename}"
+    fpath = UPLOAD_DIR / fname
+    with open(fpath, "wb") as f:
         f.write(await file.read())
 
-    # mock analysis
-    return AnalyzeResponse(
-        startup_name="Startup 1",
-        sector="HealthTech",
-        status="under_review",
-        executive_summary="AI triage tool reducing ED wait times by 20%.",
-        strengths=["Clear ROI", "Strong team", "Defined regulatory path"],
-        weaknesses=["Integration risk", "Sales cycle length"],
-        notes="Looks promising; worth diligence.",
-        links={"download": None, "view": None}
-    )
+    try:
+        # 2) Extract + Analyze
+        pitch_text = extract_text(str(fpath))
+        raw = analyze_pitch_deck(pitch_text)
+
+        # 3) Shape to a single report blob
+        report = _to_report_text(raw)
+        payload = {"report": report, "download": f"/files/{fname}"}
+
+        logger.info("Analysis OK for %s", fname)
+        return JSONResponse(content=payload, status_code=200)
+
+    except Exception as e:
+        logger.critical("App failed on %s: %s", fname, e)
+        return JSONResponse(
+            content={"report": f"Failed to analyze {fname}: {e}", "download": f"/files/{fname}"},
+            status_code=500,
+        )
+
+@app.get("/files/{name}")
+def download(name: str):
+    path = UPLOAD_DIR / name
+    if path.exists():
+        return FileResponse(path)
+    return JSONResponse(content={"error": "not found"}, status_code=404)

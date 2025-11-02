@@ -9,3 +9,8 @@ logs/
 *.log
 
 .DS_Store
+
+# File types to ignore --- IGNORE ---
+*.pdf
+*.docx
+*.xlsx
