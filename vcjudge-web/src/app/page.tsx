@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 
 // === Config ===
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
@@ -182,6 +183,10 @@ export default function Page() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 22 }}>🚀</span>
             <div style={styles.bannerTitle}>HyperVC – Pitch Analyzer</div>
+          
+          <Link href="/pitches">
+            <button style={styles.btnGhost}>All Pitches</button>
+          </Link>
           </div>
           {normalized && typeof normalized.overall_score === 'number' && (
             <div style={{ fontWeight: 800, fontSize: 16 }}>Overall: {normalized.overall_score.toFixed(2)}/10</div>

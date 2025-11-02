@@ -3,20 +3,23 @@ Name: VCJudge
 Version: 0.1.0
 Summary: LLM utility to evaluate startup pitch decks based on key VC metrics.
 Author: Shiwang Jaiswal
-Classifier: Programming Language :: Python :: 3.13
-Classifier: Operating System :: OS Independent
+Classifier:
+- "Programming Language :: Python :: 3.13"
+- "Operating System :: OS Independent"
 License-File: LICENSE
-Requires-Dist: openai
-Requires-Dist: llama-cpp-python
-Requires-Dist: anthropic
-Requires-Dist: groq
-Requires-Dist: PyMuPDF
-Requires-Dist: python-pptx
-Requires-Dist: PyYAML
-Requires-Dist: pydantic
-Requires-Dist: tqdm
-Dynamic: author
-Dynamic: classifier
-Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: summary
+Requires-Dist:
+- openai
+- llama-cpp-python
+- anthropic
+- groq
+- PyMuPDF
+- python-pptx
+- PyYAML
+- pydantic
+- tqdm
+Dynamic:
+- author
+- classifier
+- license-file
+- requires-dist
+- summary
