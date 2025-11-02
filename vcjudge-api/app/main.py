@@ -5,6 +5,8 @@ from fastapi.responses import FileResponse, JSONResponse
 from pathlib import Path
 import uuid, os, sys, logging
 
+from .report_parser import parse_llm_report_to_struct
+
 # --- Make sure project root is importable (so `llm` works) ---
 ROOT = Path(__file__).resolve().parents[1]   # vc-judge-api/
 PROJECT_ROOT = ROOT.parent                   # VCJudge/
@@ -89,10 +91,10 @@ async def analyze(file: UploadFile = File(...)):
         pitch_text = extract_text(str(fpath))
         raw = analyze_pitch_deck(pitch_text)
 
-        # 3) Shape to a single report blob
-        report = _to_report_text(raw)
-        payload = {"report": report, "download": f"/files/{fname}"}
-
+        # 3) Parse the raw report to structured data and return at top-level
+        parsed = parse_llm_report_to_struct(raw)
+        payload = {**parsed, "download": f"/files/{fname}"}
+        print(parsed)
         logger.info("Analysis OK for %s", fname)
         return JSONResponse(content=payload, status_code=200)
 

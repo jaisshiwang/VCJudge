@@ -64,3 +64,12 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2025-10-26 12:20:04,863 - CRITICAL - App failed: Error code: 404 - {'error': {'message': 'The model `llama3-8b-8192-fp16` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'code': 'model_not_found'}}
 2025-10-26 12:20:32,225 - CRITICAL - App failed: Error code: 400 - {'error': {'message': 'The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.', 'type': 'invalid_request_error', 'code': 'model_decommissioned'}}
 2025-10-26 12:21:37,726 - CRITICAL - App failed: Error code: 404 - {'error': {'message': 'The model `llama‑3.1‑8b‑instant` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'code': 'model_not_found'}}
+2025-11-02 03:47:17,132 - CRITICAL - App failed: 'str' object has no attribute 'items'
+2025-11-02 03:49:14,974 - INFO - Starting analysis for: data/HyperVC.pdf
+2025-11-02 03:49:17,028 - INFO - ✅ Analysis completed successfully.
+2025-11-02 03:49:40,793 - INFO - Starting analysis for: data/HyperVC.pdf
+2025-11-02 03:49:42,781 - INFO - ✅ Analysis completed successfully.
+2025-11-02 03:50:02,222 - INFO - Starting analysis for: data/HyperVC.pdf
+2025-11-02 03:50:04,230 - INFO - ✅ Analysis completed successfully.
+2025-11-02 03:50:37,275 - INFO - Starting analysis for: data/HyperVC.pdf
+2025-11-02 03:50:39,409 - INFO - ✅ Analysis completed successfully.
