@@ -13,7 +13,7 @@ Given the following startup pitch content, score the startup on each of the foll
 10. Scalability
 
 Overall, provide a score out of 10 for the startup's potential for success.
-Additionally, provide a concise 2-3 sentence of executive summary of the startup.
+Additionally, provide a comprehensive "About the company" of the startup.
 Also provide strengths and weaknesses of the pitch in bullet points.
 Startup Pitch Deck Text:
 {deck_text}

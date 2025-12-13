@@ -1,5 +1,3 @@
-
-from openai import OpenAI
 from llm.prompts import PITCH_ANALYSIS_PROMPT
 from llm.clients import call_model
 
